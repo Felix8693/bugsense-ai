@@ -1,0 +1,24 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - MIMO_API_KEY=${MIMO_API_KEY}
+      - MIMO_BASE_URL=${MIMO_BASE_URL}
+      - MIMO_MODEL=${MIMO_MODEL}
+      - ACTIVE_PROVIDER=${ACTIVE_PROVIDER}
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
+      - ENVIRONMENT=${ENVIRONMENT:-development}
+      - VISITOR_DAILY_LIMIT=${VISITOR_DAILY_LIMIT:-10}
+      - IP_DAILY_LIMIT=${IP_DAILY_LIMIT:-30}
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"

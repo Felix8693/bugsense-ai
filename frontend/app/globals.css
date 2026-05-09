@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-primary: #0f1117;
+  --bg-card: #1a1d2e;
+  --accent: #4f8ef7;
+  --accent-success: #22c55e;
+  --accent-error: #ef4444;
+  --accent-warning: #f59e0b;
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family:
+    -apple-system,
+    "PingFang SC",
+    "Microsoft YaHei",
+    "Hiragino Sans GB",
+    "WenQuanYi Micro Hei",
+    sans-serif;
+}
+
+code,
+pre {
+  font-family: "Cascadia Code", Consolas, Monaco, monospace;
+}
