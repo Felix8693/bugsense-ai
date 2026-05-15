@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
@@ -15,7 +15,9 @@ export async function POST(request: NextRequest) {
     const data = await res.json();
 
     return NextResponse.json(data, { status: res.status });
-  } catch {
+  } catch (error) {
+    console.error("Proxy analyze error:", error);
+
     return NextResponse.json(
       {
         request_id: "req_proxy_err",
