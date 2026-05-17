@@ -1,110 +1,68 @@
 # BugSense AI
 
-Paste an error message, get a diagnosis and fix suggestion powered by AI.
+BugSense AI is an AI-powered error log analysis tool for developers and AI tool users.
+
+Users can paste error logs from Python, Node.js, Docker, Next.js, Git, CI/CD, or AI coding tools. BugSense AI will analyze the error and return a structured explanation, including root cause, fix steps, code change suggestions, and prevention tips.
+
+## Online Demo
+
+Frontend:
+
+https://bugsense-ai-flame.vercel.app
+
+Backend health check:
+
+https://bugsense-ai-production.up.railway.app/health
+
+## Features
+
+- Paste error logs and get AI-powered debugging suggestions
+- Supports Python, Node.js, Docker, Next.js, Git, CI/CD and common development errors
+- Automatically detects error type locally before AI analysis
+- Provides root cause, fix steps, code suggestions and prevention tips
+- Redis-based result cache
+- IP and visitor_id based rate limiting
+- Secret redaction before sending logs to the model
+- Frontend proxy route for safer API calls
+- Deployed with Vercel frontend and Railway backend
 
 ## Tech Stack
 
-- **Backend**: Python 3.11, FastAPI, Uvicorn
-- **Frontend**: Next.js 14, React 18, TypeScript, Tailwind CSS
-- **Cache / Rate Limit**: Redis 7
-- **AI**: MIMO (via OpenAI-compatible API)
+### Frontend
 
-## Local Development (no Docker)
+- Next.js
+- TypeScript
+- React
+- Vercel
 
 ### Backend
 
-```bash
-cd backend
-python -m venv venv
-venv\Scripts\activate          # Windows
-# source venv/bin/activate     # macOS / Linux
-pip install -r requirements.txt
-cp .env.example .env           # fill in MIMO_API_KEY, MIMO_BASE_URL, MIMO_MODEL
-uvicorn main:app --reload --port 8000
-```
+- FastAPI
+- Python
+- Uvicorn
+- Redis
+- Docker
+- Railway
 
-### Frontend
+### AI Provider
 
-```bash
-cd frontend
-npm install
-npm run dev                    # http://localhost:3000
-```
+- MiMo API
+- OpenAI-compatible chat completions API
 
-### Redis (required for cache + rate limit)
+## Project Structure
 
-Install Redis locally, or run:
-
-```bash
-docker run -d --name bugsense-redis -p 6379:6379 redis:7-alpine
-```
-
-## Docker + Redis
-
-### 1. Create `.env` at project root
-
-```bash
-cp backend/.env.example .env
-```
-
-Edit `.env` and fill in your values:
-
-| Variable | Example |
-|---|---|
-| MIMO_API_KEY | your-real-api-key |
-| MIMO_BASE_URL | https://api.example.com/v1 |
-| MIMO_MODEL | mimo-v2.5-pro |
-| ACTIVE_PROVIDER | mimo |
-| CORS_ORIGINS | http://localhost:3000,http://127.0.0.1:3000 |
-| ENVIRONMENT | development |
-| VISITOR_DAILY_LIMIT | 10 |
-| IP_DAILY_LIMIT | 30 |
-
-> REDIS_URL is set automatically inside docker-compose to `redis://redis:6379`.
-
-### 2. Start
-
-```bash
-docker compose up --build -d
-```
-
-### 3. View logs
-
-```bash
-docker compose logs -f backend
-```
-
-### 4. Stop
-
-```bash
-docker compose down
-```
-
-## API Endpoints
-
-### Health check
-
-```bash
-curl http://localhost:8000/health
-```
-
-### Analyze
-
-```bash
-curl -X POST http://localhost:8000/api/analyze \
-  -H "Content-Type: application/json" \
-  -d '{"error_message": "NullPointerException at com.example.App.main(App.java:10)", "language": "java"}'
-```
-
-Sending the same error message again will return `"cached": true`.
-
-## Troubleshooting
-
-**MIMO_BASE_URL format**
-Do NOT use `https://xxxxxx/v1` — that is a placeholder. Use the actual base URL of your MIMO API endpoint, e.g. `https://api.example.com/v1`. The `/v1` suffix is required.
-
-**`.env` should not be committed**
-The `.gitignore` already excludes `.env`. Never commit files containing real API keys to GitHub.
-
-**PowerShell Chinese garbled output**
-Terminal display of Chinese characters may look garbled in PowerShell. This does not affect the frontend — Chinese text renders correctly in the browser.
+```text
+bugsense-ai/
+├── backend/
+│   ├── main.py
+│   ├── providers/
+│   ├── core/
+│   └── requirements.txt
+├── frontend/
+│   ├── app/
+│   ├── app/api/analyze/route.ts
+│   └── package.json
+├── docker-compose.yml
+├── .env.example
+├── .gitignore
+└── README.md
