@@ -24,6 +24,7 @@ export default function Home() {
   const [result, setResult] = useState<DevAnalysisResult | UserAnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [remainingRequests, setRemainingRequests] = useState(10);
+  const [copied, setCopied] = useState(false);
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // debounce 500ms 检测工具
@@ -48,6 +49,69 @@ export default function Home() {
       }
     };
   }, [inputText]);
+
+  const formatResultAsText = useCallback((): string => {
+    if (!result) return "";
+
+    const lines: string[] = ["# BugSense AI 分析结果", ""];
+
+    if (mode === "developer") {
+      const dev = result as DevAnalysisResult;
+      lines.push(`## 错误类型`, dev.error_type, "");
+      lines.push(`## 严重程度`, dev.severity, "");
+      lines.push(`## 根因分析`, dev.root_cause, "");
+      lines.push(`## 置信度`, `${dev.confidence}%`, "");
+
+      if (dev.fix_steps.length > 0) {
+        lines.push(`## 修复步骤`);
+        dev.fix_steps.forEach((step) => {
+          const cmd = step.command ? ` \`${step.command}\`` : "";
+          lines.push(`${step.step}. ${step.action}${cmd}`);
+        });
+        lines.push("");
+      }
+
+      if (dev.code_changes.length > 0) {
+        lines.push(`## 代码修改建议`);
+        dev.code_changes.forEach((change, i) => {
+          if (change.file) lines.push(`**文件: ${change.file}**`);
+          if (change.before) lines.push("**修改前:**", "```", change.before, "```");
+          if (change.after) lines.push("**修改后:**", "```", change.after, "```");
+          lines.push(change.explanation, "");
+        });
+      }
+
+      if (dev.prevention_tips.length > 0) {
+        lines.push(`## 预防建议`);
+        dev.prevention_tips.forEach((tip) => lines.push(`- ${tip}`));
+      }
+    } else {
+      const user = result as UserAnalysisResult;
+      lines.push(`## 简单解释`, user.plain_explanation, "");
+      lines.push(`## 严重程度`, user.severity_message, "");
+
+      if (user.steps.length > 0) {
+        lines.push(`## 操作步骤`);
+        user.steps.forEach((step) => {
+          const cmd = step.command ? ` \`${step.command}\`` : "";
+          lines.push(`${step.step_number}. ${step.instruction}${cmd}`);
+        });
+        lines.push("");
+      }
+
+      lines.push(`## 如何确认已修复`, user.success_check, "");
+      lines.push(`## 如果还是不行`, user.if_still_failing);
+    }
+
+    return lines.join("\n");
+  }, [result, mode]);
+
+  const handleCopy = useCallback(async () => {
+    const text = formatResultAsText();
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }, [formatResultAsText]);
 
   const handleAnalyze = useCallback(async () => {
     if (!inputText.trim() || inputText.trim().length < 10) return;
@@ -202,6 +266,14 @@ See more info here: https://nextjs.org/docs/messages/react-hydration-error`)}
           {/* 结果展示 */}
           {result && (
             <div className="mt-6">
+              <div className="flex justify-end mb-3">
+                <button
+                  onClick={handleCopy}
+                  className="px-4 py-2 bg-card border border-[#2a2d3e] rounded-lg text-sm text-text-secondary hover:text-accent hover:border-accent/50 transition-colors"
+                >
+                  {copied ? "已复制 ✓" : "复制结果"}
+                </button>
+              </div>
               {mode === "developer" ? (
                 <DevResultCard result={result as DevAnalysisResult} />
               ) : (
