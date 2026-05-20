@@ -318,6 +318,17 @@ See more info here: https://nextjs.org/docs/messages/react-hydration-error`)}
       {/* Footer */}
       <footer className="border-t border-[#2a2d3e]">
         <RateLimitBanner remaining={remainingRequests} />
+        <div className="text-center py-4 px-4">
+          <p className="text-text-secondary text-xs">
+            发现分析不准？欢迎{" "}
+            <a
+              href="mailto:lele056427@gmail.com"
+              className="text-accent hover:text-accent/80 transition-colors underline underline-offset-2"
+            >
+              反馈问题或建议
+            </a>
+          </p>
+        </div>
       </footer>
     </div>
   );
