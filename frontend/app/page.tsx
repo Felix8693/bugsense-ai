@@ -16,6 +16,8 @@ const PLACEHOLDERS: Record<UserMode, string> = {
   ai_user: "把报错截图里的红色文字复制过来粘贴在这里...",
 };
 
+const MAX_INPUT_LENGTH = 20000;
+
 export default function Home() {
   const [mode, setMode] = useState<UserMode>("developer");
   const [inputText, setInputText] = useState("");
@@ -114,7 +116,7 @@ export default function Home() {
   }, [formatResultAsText]);
 
   const handleAnalyze = useCallback(async () => {
-    if (!inputText.trim() || inputText.trim().length < 10) return;
+    if (!inputText.trim() || inputText.trim().length < 10 || inputText.length > MAX_INPUT_LENGTH) return;
     setIsLoading(true);
     setResult(null);
     setError(null);
@@ -168,8 +170,32 @@ export default function Home() {
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             placeholder={PLACEHOLDERS[mode]}
-            className="w-full h-36 sm:h-48 p-3 sm:p-4 bg-card border border-[#2a2d3e] rounded-lg text-text-primary placeholder-text-secondary resize-none focus:outline-none focus:border-accent transition-colors font-mono text-sm"
+            className={`w-full h-36 sm:h-48 p-3 sm:p-4 bg-card border rounded-lg text-text-primary placeholder-text-secondary resize-none focus:outline-none focus:border-accent transition-colors font-mono text-sm ${
+              inputText.length > MAX_INPUT_LENGTH
+                ? "border-accent-error"
+                : "border-[#2a2d3e]"
+            }`}
           />
+
+          {/* Character Count */}
+          <div className="mt-1 flex items-center justify-between">
+            <div>
+              {inputText.length > MAX_INPUT_LENGTH && (
+                <span className="text-accent-error text-xs">
+                  日志太长，请删除无关内容后再分析
+                </span>
+              )}
+            </div>
+            <span
+              className={`text-xs ${
+                inputText.length > MAX_INPUT_LENGTH
+                  ? "text-accent-error"
+                  : "text-text-secondary"
+              }`}
+            >
+              {inputText.length} / {MAX_INPUT_LENGTH}
+            </span>
+          </div>
 
           {/* Example Buttons */}
           <div className="mt-3 flex flex-wrap gap-2">
@@ -247,7 +273,12 @@ See more info here: https://nextjs.org/docs/messages/react-hydration-error`)}
           {/* Analyze Button */}
           <button
             onClick={handleAnalyze}
-            disabled={!inputText.trim() || inputText.trim().length < 10 || isLoading}
+            disabled={
+              !inputText.trim() ||
+              inputText.trim().length < 10 ||
+              inputText.length > MAX_INPUT_LENGTH ||
+              isLoading
+            }
             className="w-full mt-4 py-3 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-accent text-white hover:bg-accent/90"
           >
             {isLoading ? "分析中..." : "开始分析"}
