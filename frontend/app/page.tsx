@@ -107,6 +107,74 @@ export default function Home() {
             className="w-full h-36 sm:h-48 p-3 sm:p-4 bg-card border border-[#2a2d3e] rounded-lg text-text-primary placeholder-text-secondary resize-none focus:outline-none focus:border-accent transition-colors font-mono text-sm"
           />
 
+          {/* Example Buttons */}
+          <div className="mt-3 flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setInputText(`Traceback (most recent call last):
+  File "main.py", line 42, in process_data
+    result = json.loads(raw_data)
+json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 3 column 5 (char 45)`)}
+              className="px-3 py-1.5 bg-card border border-[#2a2d3e] rounded-full text-xs text-text-secondary hover:text-accent hover:border-accent/50 transition-colors"
+            >
+              试试 Python 报错
+            </button>
+            <button
+              type="button"
+              onClick={() => setInputText(`npm ERR! code ERESOLVE
+npm ERR! ERESOLVE could not resolve
+npm ERR! While resolving: my-project@1.0.0
+npm ERR! Found: react@18.2.0
+npm ERR! node_modules/react
+npm ERR!   react@"^18.2.0" from the root project
+npm ERR!
+npm ERR! Could not resolve dependency:
+npm ERR! peer react@"^17.0.0" from some-old-lib@2.3.1
+npm ERR! node_modules/some-old-lib
+npm ERR!   some-old-lib@"^2.3.1" from the root project`)}
+              className="px-3 py-1.5 bg-card border border-[#2a2d3e] rounded-full text-xs text-text-secondary hover:text-accent hover:border-accent/50 transition-colors"
+            >
+              试试 npm 依赖冲突
+            </button>
+            <button
+              type="button"
+              onClick={() => setInputText(`ERROR [builder 5/8] RUN npm ci --only=production
+#12 1.234 npm ERR! code E401
+#12 1.235 npm ERR! Unable to authenticate, need: Basic realm="https://registry.npmjs.org/"
+#12 1.237
+#12 1.237 npm ERR! A complete log of this run can be found in:
+#12 1.237 npm ERR!     /root/.npm/_logs/2024-01-15T10_32_45_123Z-debug-0.log
+------
+Dockerfile:8
+--------------------
+   6 |
+   7 |     COPY package*.json ./
+   8 | >>> RUN npm ci --only=production
+   9 |
+  10 |     COPY . .
+--------------------
+error: failed to solve: process "/bin/sh -c npm ci --only=production" did not complete successfully: exit code 1`)}
+              className="px-3 py-1.5 bg-card border border-[#2a2d3e] rounded-full text-xs text-text-secondary hover:text-accent hover:border-accent/50 transition-colors"
+            >
+              试试 Docker 构建失败
+            </button>
+            <button
+              type="button"
+              onClick={() => setInputText(`Warning: Text content did not match. Server: "Hello, User!" Client: "Hello, Guest!"
+    at span
+    at div
+    at Header (webpack-internal:///(app-pages-browser)/./components/Header.tsx:15:11)
+    at body
+    at html
+
+Error: Hydration failed because the initial UI does not match what was rendered on the server.
+See more info here: https://nextjs.org/docs/messages/react-hydration-error`)}
+              className="px-3 py-1.5 bg-card border border-[#2a2d3e] rounded-full text-xs text-text-secondary hover:text-accent hover:border-accent/50 transition-colors"
+            >
+              试试 Next.js Hydration
+            </button>
+          </div>
+
           {/* ToolBadge */}
           <div className="mt-3 min-h-[28px]">
             <ToolBadge tool={detectedTool} isFromBackend={false} />
