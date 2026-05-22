@@ -18,6 +18,38 @@ const PLACEHOLDERS: Record<UserMode, string> = {
 
 const MAX_INPUT_LENGTH = 20000;
 
+const TRUST_BADGES = [
+  "Python",
+  "Node.js",
+  "Docker",
+  "Next.js",
+  "Git",
+  "AI 编程工具",
+];
+
+const FEATURES = [
+  {
+    icon: "🔍",
+    title: "根因分析",
+    desc: "不只翻译报错信息，而是解释为什么发生、怎么修",
+  },
+  {
+    icon: "⚡",
+    title: "可执行修复步骤",
+    desc: "给出终端命令、代码修改建议，复制即可用",
+  },
+  {
+    icon: "👥",
+    title: "面向两类用户",
+    desc: "开发者模式含技术细节，AI 用户模式用大白话解释",
+  },
+  {
+    icon: "🔒",
+    title: "隐私保护",
+    desc: "发送给 AI 前自动隐藏 API Key、Token、密码等敏感信息",
+  },
+];
+
 export default function Home() {
   const [mode, setMode] = useState<UserMode>("developer");
   const [inputText, setInputText] = useState("");
@@ -158,12 +190,27 @@ export default function Home() {
       <main className="flex flex-1 flex-col items-center justify-start sm:justify-center px-4 py-6 sm:py-12">
         <div className="w-full max-w-2xl">
           {/* Hero */}
-          <h1 className="text-2xl font-bold text-text-primary text-center mb-2">
-            粘贴报错，30秒看懂
+          <h1 className="text-2xl sm:text-3xl font-bold text-text-primary text-center mb-3">
+            把报错日志变成可执行的修复方案
           </h1>
-          <p className="text-text-secondary text-center mb-6">
-            智能分析错误日志，给出可执行的修复方案
+          <p className="text-text-secondary text-center mb-4 text-sm sm:text-base">
+            支持 Python、Node.js、Docker、Next.js、Git 及主流 AI 编程工具的错误日志分析
           </p>
+
+          {/* Trust Badges */}
+          <div className="flex flex-wrap justify-center gap-2 mb-8">
+            {TRUST_BADGES.map((badge) => (
+              <span
+                key={badge}
+                className="px-3 py-1 bg-card border border-[#2a2d3e] rounded-full text-xs text-text-secondary"
+              >
+                {badge}
+              </span>
+            ))}
+            <span className="px-3 py-1 bg-accent/10 border border-accent/20 rounded-full text-xs text-accent">
+              自动隐藏敏感信息
+            </span>
+          </div>
 
           {/* Textarea */}
           <textarea
@@ -310,6 +357,26 @@ See more info here: https://nextjs.org/docs/messages/react-hydration-error`)}
               ) : (
                 <UserResultCard result={result as UserAnalysisResult} />
               )}
+            </div>
+          )}
+
+          {/* Feature Cards — shown when no result */}
+          {!result && !isLoading && (
+            <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {FEATURES.map((f) => (
+                <div
+                  key={f.title}
+                  className="bg-card border border-[#2a2d3e] rounded-lg p-4"
+                >
+                  <div className="text-xl mb-2">{f.icon}</div>
+                  <h3 className="font-semibold text-text-primary text-sm mb-1">
+                    {f.title}
+                  </h3>
+                  <p className="text-text-secondary text-xs leading-relaxed">
+                    {f.desc}
+                  </p>
+                </div>
+              ))}
             </div>
           )}
         </div>
