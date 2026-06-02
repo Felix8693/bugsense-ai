@@ -67,4 +67,6 @@ bugsense-ai/
 ├── .gitignore
 └── README.md
 
-![BugSense AI Screenshot](./docs/home-page.png)
+## Screenshot
+
+![BugSense AI Home Page](./docs/home-page.png.png)
