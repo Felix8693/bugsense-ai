@@ -66,7 +66,9 @@ bugsense-ai/
 ├── .env.example
 ├── .gitignore
 └── README.md
+```
 
 ## Screenshot
 
 ![BugSense AI Home Page](./docs/home-page.png.png)
+
